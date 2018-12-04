@@ -1,0 +1,332 @@
+/*  Home page styles*/
+
+/*  Colors
+  page background: #ceddef
+  light light blue: #5893d4
+  light blue #1f3c88
+  dark blue #070d59
+*/
+
+/********************
+  Front side style
+*********************/
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: 'Roboto Slab', sans-serif;
+  letter-spacing: 1.5px;
+}
+
+img {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+html, body {
+  font-size: 16px;
+  background: #CEDDEF;
+  color: #0f140f;
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/*  General styles */
+
+.container {
+  width: 100%;
+}
+
+/*  Navigation styles */
+
+.headerPart {
+  max-width: 100%;
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.8);
+}
+
+.navigation {
+  width: 100%;
+  background: #070D59;
+}
+
+#links > li {
+  display: inline-block;
+  width: 33.3%;
+  height: 50px;
+}
+
+#links > li > a {
+  display: block;
+  text-align: center;
+  line-height: 50px;
+  color: #CEDDEF;
+  width: 100%;
+  height: 50px;
+  transition: .4s;
+  border-left: 0.3px solid #efefef;
+  font-size: 1.12rem;
+}
+
+#links > li > a:first-of-type {
+  border-left: none;
+}
+
+#links > li > a:hover {
+  background: #3A3F8C;
+  color: #DFEEFF !important;
+}
+
+/*  Front Side Styles  */
+
+#firstSection {
+  position: relative;
+}
+
+#firstLook {
+  width: 100%;
+}
+
+#comName {
+  display: inline-block;
+  margin: 30px 6px 10px;
+  font-size: 4.5rem;
+  letter-spacing: 4px;
+  position: relative;
+}
+
+#comName > span {
+  position: absolute;
+  z-index: 1;
+  content: "";
+  width: 95%;
+  height: 12px;
+  transform: rotate(-0.2deg);
+  margin: 0 auto;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(33, 33, 33, 0.4);
+}
+
+#lead {
+  margin: 0px 10px;
+}
+
+#heading {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+#subHeading {
+  line-height: 1.72;
+  padding-left: 14px;
+}
+
+hr {
+  margin: 14px;
+  margin-top: 18px;
+}
+
+/* Section Styles */
+
+#Contact {
+  margin-left: 8px;
+}
+
+#howToBuy {
+  line-height: 1.3;
+  font-size: 1.8rem;
+}
+
+.primary {
+  margin: 0 10px;
+}
+
+#phoneNumbers,
+#address {
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+.primary > p {
+  line-height: 1.6;
+  padding-bottom: 10px;
+}
+
+.primary > ul > li {
+  display: inline-block;
+}
+
+.primary > ul > li > a {
+  display: block;
+  color: rgb(11, 40, 196);
+  margin-left: 1.8rem;
+  padding: 2px 10px 13px;
+}
+
+.secondary {
+  margin: 0 10px;
+}
+
+.secondary > p {
+  line-height: 1.6;
+  padding-bottom: 10px;
+}
+
+#address {
+  padding-top: 15px;
+}
+
+#physicalAddress {
+  line-height: 1.8;
+  padding: 0px 35px;
+}
+
+#About {
+  margin-bottom: 40px;
+}
+
+#aboutOurCompany {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+}
+
+#imgContainer > img {
+  border: 3px solid rgb(15, 20, 15,0.7);
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+#description {
+  text-align: center;
+  line-height: 1.8;
+  padding: 0px 16px 10px;
+}
+
+.personalMedia > li {
+  display: block;
+  margin: 10px auto;
+  width: 35%;
+}
+
+.personalMedia > li > a {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  background: #1f3c88;
+  color: #ceddef;
+  padding: 16px 20px;
+  border-radius: 4px;
+}
+
+/*  Footer styles */
+
+#footerSide {
+  display: block;
+  width: 100%;
+  background: #ceddef;
+}
+
+.socialMedias {
+  display: block;
+  margin: 0px auto 20px;
+  width: 50%;
+
+}
+
+.socialMedias > li {
+  display: inline-block;
+  width: 48%;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.socialMedias > li > a {
+  display: block;
+  width: 75%;
+  margin: 0 auto;
+  text-align: center;
+  background: #1f3c88;
+  color: #ceddef;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#footerSide p {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  margin-bottom: 10px;
+}
+
+
+/* Media queries */
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  #links > li > a {
+    font-size: 1.4rem;
+  }
+  #firstLook {
+    padding: 0px 8px;
+  }
+  #comName {
+    font-size: 8rem;
+  }
+  #comName > span {
+    top: 115px;
+  }
+  #heading {
+    font-size: 3.5rem;
+  }
+  #subHeading,
+  .primary > p,
+  .secondary > p {
+    font-size: 1.25rem;
+  }
+  #Contact {
+    padding: 0px 8px;
+  }
+  #phoneNumbers,
+  #address {
+    font-size: 0.9rem;
+  }
+  .secondary {
+    margin-top: 18px;
+  }
+  #aboutOurCompany {
+    font-size: 2.4rem;
+  }
+  #imgContainer > img {
+    width: 200px;
+    height: 200px;
+  }
+  #description {
+    font-size: 1.2rem;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}

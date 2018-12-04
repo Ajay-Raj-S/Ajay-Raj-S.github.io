@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Tempered Glass | Whole sale Mobile phones tempered Glasses</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/home_style.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="headerPart">
+        <nav class="navigation">
+          <ul id="links">
+            <li><a href="#firstSection">Home</a></li><li>
+            <a href="#Contact">Contact</a></li><li>
+            <a href="#About">About</a></li></ul>
+        </nav>
+      </header>
+      <section id="firstSection">
+        <div id="firstLook">
+          <h1 id="comName">GLOBAL <span></span></h1>
+          <div id="lead">
+            <h1 id="heading">Tempered Glass</h1>
+            <p id="subHeading">We craft and sell all types of Tempered Glass as a whole for the market price.</p>
+          </div>
+        </div>
+      </section><hr>
+      <div id="Contact">
+        <div class="ways">
+          <h1 id="howToBuy">How to buy our products for your profitable business?</h1>
+          <div class="primary">
+            <p>You can always contact these numbers for making business with us!</p>
+            <p id="phoneNumbers"><i>Phone Numbers: </i></p>
+            <ul>
+              <li><a href="tel:+91-892-555-4562">+91 892-555-4562</a></li>
+              <li><a href="tel:+91-909-090-9090">+91 909-090-9090</a></li>
+            </ul>
+          </div>
+          <div class="secondary">
+            <p>Need more clarifications, we are glad to welcome your presence in our office.</p>
+            <p id="address"><i>Address:</i></p>
+            <address id="physicalAddress">
+              89, green avenue st, <br>
+              ECR, chennai-90 <br>
+            </address>
+          </div>
+        </div>
+      </div><hr>
+      <div id="About">
+        <div id="imgContainer">
+          <img src="img/human.png" alt="Owner">
+        </div>
+        <h1 id="aboutOurCompany">About</h1>
+        <p id="description">I am Bala Kumar, I create these glasses for any smart phones, and selling as a whole for factory price. If you are interested to do business with me I am all ears, you can always contact the numbers given above, I am happy to hear from you.</p>
+        <ul class="personalMedia">
+          <li><a href="https://twitter.com/balamech2341994" target="_blank">twitter</a></li>
+        </ul>
+      </div><hr>
+      <footer id="footerSide">
+        <ul class="socialMedias">
+          <li><a href="#"><i class="fab fa-facebook-f"></i></i></a></li>
+          <li><a style="background: #38a1f3;" href="#"><i class="fab fa-twitter"></i></a></li>
+        </ul>
+        <p>TemperedGlass.com © All rights reserved</p>
+      </footer>
+    </div>
+  </body>
+  <script>
+  $('a[href*="#"]')
+// Remove links that don't actually link to anything
+.not('[href="#"]')
+.not('[href="#0"]')
+.click(function(event) {
+  // On-page links
+  if (
+    location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+    &&
+    location.hostname == this.hostname
+  ) {
+    // Figure out element to scroll to
+    var target = $(this.hash);
+    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+    // Does a scroll target exist?
+    if (target.length) {
+      // Only prevent default if animation is actually gonna happen
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: target.offset().top
+      }, 1000, function() {
+        // Callback after animation
+        // Must change focus!
+        var $target = $(target);
+        $target.focus();
+        if ($target.is(":focus")) { // Checking if the target was focused
+          return false;
+        } else {
+          // $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+          $target.focus(); // Set focus again
+        };
+      });
+    }
+  }
+});
+
+  </script>
+</html>
