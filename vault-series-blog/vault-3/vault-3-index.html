@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 3 WriteUp | AJ C0DE5 Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-3-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>27-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+				<article class="article">
+					<h3>vault-door-3 - Points 200</h3>
+					<p class="lead">This vault uses for-loops and byte arrays. The source code for this vault is here:</p>
+<pre class="code-background prettyprint">import java.util.*;
+
+class VaultDoor3 {
+    public static void main(String args[]) {
+        VaultDoor3 vaultDoor = new VaultDoor3();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+  String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+  if (vaultDoor.checkPassword(input)) {
+      System.out.println("Access granted.");
+  } else {
+      System.out.println("Access denied!");
+        }
+    }
+
+    // Our security monitoring team has noticed some intrusions on some of the
+    // less secure doors. Dr. Evil has asked me specifically to build a stronger
+    // vault door to protect his Doomsday plans. I just *know* this door will
+    // keep all of those nosy agents out of our business. Mwa ha!
+    //
+    // -Minion #2671
+    public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        char[] buffer = new char[32];
+        int i;
+        for (i=0; i<8; i++) {
+            buffer[i] = password.charAt(i);
+        }
+        for (; i<16; i++) {
+            buffer[i] = password.charAt(23-i);
+        }
+        for (; i<32; i+=2) {
+            buffer[i] = password.charAt(46-i);
+        }
+        for (i=31; i>=17; i-=2) {
+            buffer[i] = password.charAt(i);
+        }
+        String s = new String(buffer);
+    System.out.println(s);
+        return s.equals("jU5t_a_sna_3lpm1dg347_u_4_mfr54b");
+    }
+}
+
+</pre>
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is vault-door-3 Flag Problem, this program uses for loops and user input value is being stored in a char[] array and then compares the modified buffer array with the modified flag.</p>
+            <p class="sol-lead">You might get a overview of how to get the flag but if you're not, don't worry I will try to explain as clear as possible.</p>
+
+						<pre class="code-background prettyprint">if (password.length() != 32) {
+            return false;
+        }
+        char[] buffer = new char[32];
+        int i;
+        for (i=0; i<8; i++) {
+            buffer[i] = password.charAt(i);
+        }
+        for (; i<16; i++) {
+            buffer[i] = password.charAt(23-i);
+        }
+        for (; i<32; i+=2) {
+            buffer[i] = password.charAt(46-i);
+        }
+        for (i=31; i>=17; i-=2) {
+            buffer[i] = password.charAt(i);
+        }
+        String s = new String(buffer);
+    System.out.println(s);
+        return s.equals("jU5t_a_sna_3lpm1dg347_u_4_mfr54b");		
+						</pre>
+            <p class="sol-lead">This is the actual loops that modifies the actual Flag which will be given by the user, we will see them one by one and how they are stored in the buffer[] array</p>
+            <pre class="code-background prettyprint">
+        char[] buffer = new char[32];
+        int i;
+        for (i=0; i<8; i++) {
+            buffer[i] = password.charAt(i);
+        }   </pre>
+            <p class="sol-lead">This is the first loop and as we can clearly see that the first 8 characters of user input Flag is stored as it is in the first 8 characters of the buffer array and we can also see that the first 8 characters are not modified after this loop so they are part of the actual Flag, remember we are taking these characters from the modified Flag string given in the Code, which is</p>
+            <pre class="code-background prettyprint">return s.equals("jU5t_a_sna_3lpm1dg347_u_4_mfr54b");</pre>
+            <div class="flag-table">
+              <p class="sol-lead">the resultant characters stored in the buffer array are: </p>
+              <table border="1" cellspacing="0" cellpadding="5">                
+                <tr>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>2</td>
+                  <td>3</td>
+                  <td>4</td>
+                  <td>5</td>
+                  <td>6</td>
+                  <td>7</td>
+                </tr>
+                <tr>
+                  <td>j</td>
+                  <td>U</td>
+                  <td>5</td>
+                  <td>t</td>
+                  <td>_</td>
+                  <td>a</td>
+                  <td>_</td>
+                  <td>s</td>
+                </tr>
+              </table>
+            </div>
+            <pre class="code-background prettyprint">
+        for (; i<16; i++) {
+            buffer[i] = password.charAt(23-i);
+        }   </pre>
+
+            <p class="sol-lead">This is the second loop, but this one does not have a initialization part of the for loops, so the i value would be previous loop last value, that is 8, but the characters are stored in 23-i<sup>th</sup> index which is </p>
+            <div class="flag-table">
+              <p class="sol-lead">the resultant characters stored in the buffer array are:  </p>
+              <table border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                  <td>23-8</td>
+                  <td>23-9</td>
+                  <td>23-10</td>
+                  <td>23-11</td>
+                  <td>23-12</td>
+                  <td>23-13</td>
+                  <td>23-14</td>
+                  <td>23-15</td>
+                </tr>
+                <tr>
+                  <td>15</td>
+                  <td>14</td>
+                  <td>13</td>
+                  <td>12</td>
+                  <td>11</td>
+                  <td>10</td>
+                  <td>9</td>
+                  <td>8</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>m</td>
+                  <td>p</td>
+                  <td>l</td>
+                  <td>3</td>
+                  <td>_</td>
+                  <td>a</td>
+                  <td>n</td>
+                </tr>
+                <tr></tr>
+              </table>
+            </div>
+            <pre class="code-background prettyprint">
+        for (; i<32; i+=2) {
+            buffer[i] = password.charAt(46-i);
+        }   </pre>
+            <p class="sol-lead">This is the third for loop and even this loop has no initialization part which means it takes the last loop i<sup>th</sup> value which is 16, but the characters are stored in 46-i<sup>th</sup> value and also increments by 2 not 1. Let's see how it is stored.</p>
+            <div class="flag-table">
+              <p class="sol-lead">the resultant characters stored in the buffer array are:  </p>
+              <table border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                  <td>46-16</td>
+                  <td>46-18</td>
+                  <td>46-20</td>
+                  <td>46-22</td>
+                  <td>46-24</td>
+                  <td>46-26</td>
+                  <td>46-28</td>
+                  <td>46-30</td>
+                </tr>
+                <tr>
+                  <td>30</td>
+                  <td>28</td>
+                  <td>26</td>
+                  <td>24</td>
+                  <td>22</td>
+                  <td>20</td>
+                  <td>18</td>
+                  <td>16</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>r</td>
+                  <td>m</td>
+                  <td>4</td>
+                  <td>u</td>
+                  <td>7</td>
+                  <td>3</td>
+                  <td>d</td>
+                </tr>
+              </table>
+            </div>
+            <pre class="code-background prettyprint">
+        for (i=31; i>=17; i-=2) {
+            buffer[i] = password.charAt(i);
+        }</pre>
+            <p class="sol-lead">This is the final loop in the code, this one starts with 31 and down to 17 (inclusive) and it is stored as it is, no modifications and also decrements by 2.</p>
+            <div class="flag-table">
+              <p class="sol-lead">the resultant characters stored in the buffer array are: </p>
+              <table border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                  <td>31</td>
+                  <td>29</td>
+                  <td>27</td>
+                  <td>25</td>
+                  <td>23</td>
+                  <td>21</td>
+                  <td>19</td>
+                  <td>17</td>
+                </tr>
+                <tr>
+                  <td>b</td>
+                  <td>5</td>
+                  <td>f</td>
+                  <td>_</td>
+                  <td>_</td>
+                  <td>_</td>
+                  <td>4</td>
+                  <td>g</td>
+                </tr>
+              </table>
+            </div>
+            <p class="sol-lead">When you put them all togerther you get the Flag as </p>
+            <table border="1" cellspacing="0" cellpadding="5" id="final-table">
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>19</td>
+                <td>20</td>
+                <td>21</td>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+                <td>25</td>
+                <td>26</td>
+                <td>27</td>
+                <td>28</td>
+                <td>29</td>
+                <td>30</td>
+                <td>31</td>
+              </tr>
+              <tr>
+                <td>j</td>
+                <td>U</td>
+                <td>5</td>
+                <td>t</td>
+                <td>_</td>
+                <td>a</td>
+                <td>_</td>
+                <td>s</td>
+                <td>1</td>
+                <td>m</td>
+                <td>p</td>
+                <td>l</td>
+                <td>3</td>
+                <td>_</td>
+                <td>a</td>
+                <td>n</td>
+                <td>4</td>
+                <td>g</td>
+                <td>r</td>
+                <td>4</td>
+                <td>m</td>
+                <td>_</td>
+                <td>4</td>
+                <td>_</td>
+                <td>u</td>
+                <td>_</td>
+                <td>7</td>
+                <td>f</td>
+                <td>3</td>
+                <td>5</td>
+                <td>d</td>
+                <td>b</td>                
+              </tr>
+            </table>
+			<p class="sol-lead">now you can see the final buffer array and the Flag is </p>
+						<pre class="prettyprint code-background">picoCTF{jU5t_a_s1mpl3_an4gr4m_4_u_7f35db}</pre>
+						<p>To know how to run a java program, please refer this <a class="links" target="_blank" href="https://beginnersbook.com/2013/05/first-java-program/">link</a></p>
+					</div>					
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-4/vault-4-index.html">Next | vault4 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

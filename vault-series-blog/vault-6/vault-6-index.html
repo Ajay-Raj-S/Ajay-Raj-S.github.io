@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 6 WriteUp | AJ C0DE5 Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-6-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>27-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+				<article class="article">
+					<h3>vault-door-6 - Points 350</h3>
+					<p class="lead">This vault uses an XOR encryption scheme. The source code for this vault is here:</p>
+<pre class="code-background prettyprint">import java.util.*;
+
+class VaultDoor6 {
+    public static void main(String args[]) {
+        VaultDoor6 vaultDoor = new VaultDoor6();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+        }
+    }
+
+    // Dr. Evil gave me a book called Applied Cryptography by Bruce Schneier,
+    // and I learned this really cool encryption system. This will be the
+    // strongest vault door in Dr. Evil's entire evil volcano compound for sure!
+    // Well, I didn't exactly read the *whole* book, but I'm sure there's
+    // nothing important in the last 750 pages.
+    //
+    // -Minion #3091
+    public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        byte[] passBytes = password.getBytes();
+        byte[] myBytes = {
+            0x3b, 0x65, 0x21, 0xa , 0x38, 0x0 , 0x36, 0x1d,
+            0xa , 0x3d, 0x61, 0x27, 0x11, 0x66, 0x27, 0xa ,
+            0x21, 0x1d, 0x61, 0x3b, 0xa , 0x2d, 0x65, 0x27,
+            0xa , 0x67, 0x6d, 0x33, 0x34, 0x6c, 0x60, 0x33,
+        };
+        for (int i=0; i<32; i++) {			
+            if (((passBytes[i] ^ 0x55) - myBytes[i]) != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+</pre>
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is the Sixth vault door and for first time in the series it uses a Encryption technique which is XOR (^) it outputs true only when the inputs are not same, else false. To learn more about <a class="links" href="https://en.wikipedia.org/wiki/XOR_gate">XOR</a>.</p>
+            <p class="sol-lead">First let's see what the checkPassword Method does, </p>
+            <pre class="code-background prettyprint">public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        byte[] passBytes = password.getBytes();
+        byte[] myBytes = {
+            0x3b, 0x65, 0x21, 0xa , 0x38, 0x0 , 0x36, 0x1d,
+            0xa , 0x3d, 0x61, 0x27, 0x11, 0x66, 0x27, 0xa ,
+            0x21, 0x1d, 0x61, 0x3b, 0xa , 0x2d, 0x65, 0x27,
+            0xa , 0x67, 0x6d, 0x33, 0x34, 0x6c, 0x60, 0x33,
+        };
+
+        for (int i=0; i<32; i++) {			
+            if (((passBytes[i] ^ 0x55) - myBytes[i]) != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+            </pre>
+            <p class="sol-lead">This Method gets the user input and stores them as byte array using getBytes(), this method encodes the given string into UTF-8 encoded array of characters, and then we have a byte array initialization with 32 characters of HexaDecimals, you guessed it this array must be our way to the Flag and then we have a loop which run 32 times which is exactly our Flag length, then let's see what this loop does,</p>
+            <pre class="code-background prettyprint">	for (int i=0; i<32; i++) {			
+            if (((passBytes[i] ^ 0x55) - myBytes[i]) != 0) {
+                return false;
+            }
+        }
+        return true;
+      			</pre>
+      			<p class="sol-lead">First this loop run 32 times as you already know, then it compares a condition which first  takes the user given <code class="code-word">passBytes</code> array one by one and then XOR that character with a constant Hexadecimal <code class="code-word">0x55</code> value after that it subracts that value with the <code class="code-word">myBytes</code> array then finally it compares a condition which is, the obtained value should not be equal to <code class="code-word">0</code>, if it does the loop gets terminated by passing return value as <code class="code-word">false</code> so we need to give the input as Flag where each and every character should not produce a <code class="code-word">0</code> when the calculation in the loop happens,</p>
+      			<p> If you already know that this is the perfect situation to use a Brute Force technique, if you didn't, Brute Force is just a technique which try all the combinations for the Flag or any other set of characters we are trying to obtain.</p>
+            <h3 class="brute-force">BruteForce Code: </h3>
+            <p class="sol-lead">Let me provide the code first and then I will explain about the Program, </p>
+            <pre class="code-background prettyprint">public Vault6BruteForce {
+      	public void bruteForce(String str) {
+        byte[] passBytes = str.getBytes();
+        byte[] myBytes = {
+            0x3b, 0x65, 0x21, 0xa , 0x38, 0x0 , 0x36, 0x1d,
+            0xa , 0x3d, 0x61, 0x27, 0x11, 0x66, 0x27, 0xa ,
+            0x21, 0x1d, 0x61, 0x3b, 0xa , 0x2d, 0x65, 0x27,
+            0xa , 0x67, 0x6d, 0x33, 0x34, 0x6c, 0x60, 0x33,
+        };
+        System.out.print("picoCTF{");
+        for(int i=0;i&lt;myBytes.length;i++) {
+            for(int j=0;j&lt;passBytes.length;j++) {
+                if((passBytes[j] ^ 0x55) - myBytes[i] == 0) {
+                    System.out.print((char)passBytes[j]);
+                }
+            }
+        }
+        System.out.println("}");
+    }
+    
+    public static void main(String[] args) {        
+        char[] chr = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+                      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                      '1','2','3','4','5','6','7','8','9','0','_'};
+        new Vault6BruteForce().bruteForce(Arrays.toString(chr));
+    }
+}</pre>
+            <p class="sol-lead">Like I said about trying all the combinations in the Brute Force we need all the characters and numbers and symbols as characters which are used in the Flag, and that would be <code class="code-word">a-z</code>,<code class="code-word">A-Z</code>,<code class="code-word">0-9</code>, and the symbol <code class="code-word">_</code>.</p>
+            <p class="sol-lead">After that, we are sending the <code class="code-word">chr</code> array as <code class="code-word">String</code>to the bruteForce method, and it just does the opposite of the encryption.</p>
+            <p class="sol-lead">The First loop takes the HexaDecimal <code class="code-word">myBytes</code> and the Inner loop takes our <code class="code-word">passBytes</code> array and then does the exact same calculation only to check if it equals to <code class="code-word">0</code>, then you can say that is one of the character in the Flag, when completion of each iteration a single character is printed to the output.</p>
+            <p class="sol-lead">If you run the above given Brute Force Program, you get the output as Flag </p>
+            <pre class="code-background prettyprint">picoCTF{n0t_mUcH_h4rD3r_tH4n_x0r_28fa95f}</pre>
+					</div>
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-7/vault-7-index.html">Next | vault7 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

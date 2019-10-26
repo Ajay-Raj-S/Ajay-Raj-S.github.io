@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door Training WriteUp | AJ Codes Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-training-style.css">		
+	</head>
+	<body>
+
+		<div id="content">
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+				<p class="stamp"><em>27-oct-2019 by AJc0de5</em></p>
+				<h2>Reverese Engineering > Vault Series</h2>
+				<p class="lead">In this series of blog posts, I will provide my writeups and how I found these flags and the BruteForce Codes for all the Vault Door Problems.</p>
+				<article class="article">
+					<h3>vault-door-training - Points 50</h3>
+					<p class="lead">Your mission is to enter Dr. Evil's laboratory and retrieve the blueprints for his Doomsday Project. The laboratory is protected by a series of locked vault doors. Each door is controlled by a computer and requires a password to open. Unfortunately, our undercover agents have not been able to obtain the secret passwords for the vault doors, but one of our junior agents obtained the source code for each vault's computer! You will need to read the source code for each level to figure out what the password is for that vault door. As a warmup, we have created a replica vault in our training facility.</p>
+<pre class="code-background prettyprint">import java.util.*;
+
+class VaultDoorTraining {
+    public static void main(String args[]) {
+        VaultDoorTraining vaultDoor = new VaultDoorTraining();
+        Scanner scanner = new Scanner(System.in); 
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+	}
+   }
+
+    // The password is below. Is it safe to put the password in the source code?
+    // What if somebody stole our source code? Then they would know what our
+    // password is. Hmm... I will think of some ways to improve the security
+    // on the other doors.
+    //
+    // -Minion #9567
+    public boolean checkPassword(String password) {
+        return password.equals("w4rm1ng_Up_w1tH_jAv4_e57d01a632a");
+    }
+}</pre>
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is the first Flag Problem in the Reverese Engineering Category, this one is very simple to find, the flag is literally typed in the code,</p>
+						<pre class="prettyprint code-background">return password.equals("w4rm1ng_Up_w1tH_jAv4_e57d01a632a");</pre>
+						<p class="sol-lead">when executing the above code provide the flag in the picoCTF Flag format to print the "Accecss granted." message.</p>
+						<pre class="prettyprint code-background">picoCTF{w4rm1ng_Up_w1tH_jAv4_e57d01a632a}</pre>
+						<p>To know how to run a java program, please refer this <a class="links" target="_blank" href="https://beginnersbook.com/2013/05/first-java-program/">link</a></p>
+					</div>					
+					
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-1/vault-1-index.html">Next | vault1 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

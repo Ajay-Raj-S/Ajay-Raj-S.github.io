@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 8 WriteUp | AJ C0DE5 Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-8-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>26-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+
+				<article class="article">
+					<h3>vault-door-8 - Points 450</h3>
+					<p class="lead">Apparently Dr. Evil's minions knew that our agency was making copies of their source code, because they intentionally sabotaged this source code in order to make it harder for our agents to analyze and crack into! The result is a quite mess, but I trust that my best special agent will find a way to solve it. The source code for this vault is here:</p>
+          <pre class="code-background prettyprint">import java.util.*;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
+
+class VaultDoor8 {
+  
+  public static void main(String args[]) {
+    Scanner b = new Scanner(System.in);
+    System.out.print("Enter vault password: ");
+    String c = b.next();
+    String f = c.substring(8, c.length() - 1);
+    VaultDoor8 a = new VaultDoor8();
+    if (a.checkPassword(f)) {
+      System.out.println("Access granted.");
+    } else {
+      System.out.println("Access denied!");
+    }
+  }
+  public char[] scramble(String password) {
+    /* Scramble a password by transposing pairs of bits. */
+    char[] a = password.toCharArray();
+    for (int b = 0; b < a.length; b++) {
+      char c = a[b];
+      c = switchBits(c, 1, 2);
+      c = switchBits(c, 0, 3);
+      c = switchBits(c, 5, 6);      
+      c = switchBits(c, 4, 7);      
+      c = switchBits(c, 0, 1);      
+      c = switchBits(c, 3, 4);      
+      c = switchBits(c, 2, 5);      
+      c = switchBits(c, 6, 7);      
+      a[b] = c;
+    }
+    return a;
+  }
+  
+  public char switchBits(char c, int p1, int p2) {
+    /* Move the bit in position p1 to position p2, and move the bit
+      that was in position p2 to position p1. Precondition: p1 < p2 */
+    
+    char mask1 = (char)(1 << p1);
+    char mask2 = (char)(1 << p2); /* char mask3 = (char)(1<&lt;p1&lt;&lt;p2); mask1++; mask1--; */
+    char bit1 = (char)(c & mask1);
+    char bit2 = (char)(c & mask2);
+      
+    char rest = (char)(c & ~(mask1 | mask2));
+    char shift = (char)(p2 - p1);
+    char result = (char)((bit1 << shift) | (bit2 >> shift) | rest);
+    return result;
+  }
+ 
+  public boolean checkPassword(String password) {
+    char[] scrambled = scramble(password);
+    char[] expected = {
+      0xF4, 0xC0, 0x97, 0xF0, 0x77, 0x97, 0xC0, 0xE4,
+      0xF0, 0x77, 0xA4, 0xD0, 0xC5, 0x77, 0xF4, 0x86,
+      0xD0, 0xA5, 0x45, 0x96, 0x27, 0xB5, 0x77, 0xF1,
+      0xC1, 0xF0, 0x94, 0xC1, 0xA5, 0xC1, 0xC2, 0xA4
+    };
+    
+    char[] chr = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+                      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                      '1','2','3','4','5','6','7','8','9','0','_'};
+    
+    char[] xChr = new char[3];
+    xChr[0] = 0xC1; xChr[1] = 0XC2; xChr[2] = 0XA4;
+    int flag = 1;
+    for(int i=0;i&lt;chr.length;i++) {
+      for(int j=0;j&lt;chr.length;j++) {
+        for(int k=0;k&lt;chr.length;k++) {
+          StringBuffer sb = new StringBuffer();
+          sb.append(chr[i]+""+chr[j]+""+chr[k]);
+          char[] tempScramble = scramble(sb.toString());
+          if(tempScramble[0] == xChr[0] && tempScramble[1] == xChr[1] && tempScramble[2] == xChr[2]) {
+            System.out.print(tempScramble[2]+" "+tempScramble[1]+" "+tempScramble[0]);
+            scrambled[scrambled.length - 1] = tempScramble[2];
+            scrambled[scrambled.length - 2] = tempScramble[1];
+            scrambled[scrambled.length - 3] = tempScramble[0];
+            flag = 0;
+            break;
+          }
+        }
+        if(flag == 0) {
+          break;              
+        }
+      }
+    }
+    return Arrays.equals(scrambled, expected);
+  }
+  
+}</pre>
+
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is the Last vault door and in this program the checkPassword method may look much complicated and larger but Don't let the look decieve you, if you find the logic of how the Flag is stored, you can write the Brute force for that easily, </p>
+            <p class="sol-lead">If you understand the some part of the code by following sequentially you can see that <code class="code-word">scramble</code> method does some calculation in a certain order if you reverse the order may be you can get the Flag, Let me show you how I reversed the program to get the input,</p>
+            <h3 class="brute-force">Brute Force</h3>
+          <pre class="code-background prettyprint">public class Vault8BruteForce {
+    
+    public char switchBits(char c, int p1, int p2) {
+  char mask1 = (char)(1 << p1);
+  char mask2 = (char)(1 << p2); 
+  char bit1 = (char)(c & mask1);
+  char bit2 = (char)(c & mask2);
+          
+  char rest = (char)(c & ~(mask1 | mask2));
+  char shift = (char)(p2 - p1);
+  char result = (char)((bit1 << shift) | (bit2 >> shift) | rest);
+  return result;
+    }
+    
+    public char[] unScramble(String password) {
+  char[] a = password.toCharArray();
+        for (int b = 0; b < a.length; b++) {
+            char c = a[b];
+            c = switchBits(c, 6, 7);
+            c = switchBits(c, 2, 5);
+            c = switchBits(c, 3, 4);                            
+            c = switchBits(c, 0, 1);
+            c = switchBits(c, 4, 7);
+            c = switchBits(c, 5, 6);
+            c = switchBits(c, 0, 3); 
+            c = switchBits(c, 1, 2);
+            a[b] = c;     
+        }        
+        return a;
+    }
+    
+    public static void main(String[] args) {
+        Vault8BruteForce x = new Vault8BruteForce();
+        String hex = "F4C097F07797C0E4F077A4D0C577F486D0A5459627B577F1C1F094C1A5C1C2A4";
+        StringBuilder sb = new StringBuilder();
+        for( int i=0; i< hex.length()-1; i+=2 ) {
+      //grab the hex in pairs
+      String output = hex.substring(i, (i + 2));
+        //convert hex to decimal
+      int decimal = Integer.parseInt(output, 16);
+        //convert the decimal to character
+      sb.append((char)decimal);
+    }
+        char[] temp = x.unScramble(sb.toString());
+    System.out.print("picoCTF{");
+        System.out.print(temp);
+        System.out.println("}");
+    }
+}
+
+</pre>
+            <p class="sol-lead">You can see that I didn't changed any part except but the scramble method in that I reversed the order of operations and I also converted the hex char array to a complete string, when you run the above code you can get the Flag as, </p>          
+            <pre class="code-background prettyprint">picoCTF{s0m3_m0r3_b1t_sh1fTiNg_743a4f48b}</pre>
+            <p class="sol-lead">And just a note here, I didn't even write a BruteForce code for this program just reversing the order of operation with the expected value reverses the process and reveals the Flag.</p>
+  
+            <h3 class="brute-force">Nothing is Impossible!</h3>
+            <p class="sol-lead">This is the end of the vault series blog and I will blog about other stuffs and programming techniques which I am working on, and finally if you didn't understand everything or got lost somewhere it's okay to fail, <strong><em>Failure is better than not trying at all</em></strong>. </p>
+					</div>
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="https://ajay-raj-s.github.io/">AJc0de5</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

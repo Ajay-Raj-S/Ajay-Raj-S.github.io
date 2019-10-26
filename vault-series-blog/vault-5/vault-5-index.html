@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 5 WriteUp | AJ C0DE5 Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-5-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>27-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+				<article class="article">
+					<h3>vault-door-5 - Points 300</h3>
+					<p class="lead">In the last challenge, you mastered octal (base 8), decimal (base 10), and hexadecimal (base 16) numbers, but this vault door uses a different change of base as well as URL encoding! The source code for this vault is here:</p>
+<pre class="code-background prettyprint">import java.net.URLDecoder;
+import java.util.*;
+
+class VaultDoor5 {
+    public static void main(String args[]) {
+        VaultDoor5 vaultDoor = new VaultDoor5();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+  String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+  if (vaultDoor.checkPassword(input)) {
+      System.out.println("Access granted.");
+  } else {
+      System.out.println("Access denied!");
+        }
+    }
+
+    // Minion #7781 used base 8 and base 16, but this is base 64, which is
+    // like... eight times stronger, right? Riiigghtt? Well that's what my twin
+    // brother Minion #2415 says, anyway.
+    //
+    // -Minion #2414
+    public String base64Encode(byte[] input) {
+        return Base64.getEncoder().encodeToString(input);
+    }
+
+    // URL encoding is meant for web pages, so any double agent spies who steal
+    // our source code will think this is a web site or something, defintely not
+    // vault door! Oh wait, should I have not said that in a source code
+    // comment?
+    //
+    // -Minion #2415
+    public String urlEncode(byte[] input) {
+        StringBuffer buf = new StringBuffer();      
+        for (int i=0; i&lt;input.length; i++) {
+      // 0xg33k - three % is to get one single % to the buf
+            buf.append(String.format("%%%2x", input[i]));     
+        }
+    // 0xg33k - sends back UTF-8 encoded string   
+        return buf.toString();
+    }
+
+    public boolean checkPassword(String password) {   
+        String urlEncoded = urlEncode(password.getBytes());
+    // 0xg33k - urlEncode returns c0nv3rt1ng_fr0m_ba5e_64_db6946ba
+        String base64Encoded = base64Encode(urlEncoded.getBytes());
+    // 0xg33k - base64Encode returns %63%30%6e%76%33%72%74%31%6e%67%5f%66%72%30%6d%5f%62%61%35%65%5f%36%34%5f%64%62%36%39%34%36%62%61
+        String expected = "JTYzJTMwJTZlJTc2JTMzJTcyJTc0JTMxJTZlJTY3JTVm"
+                        + "JTY2JTcyJTMwJTZkJTVmJTYyJTYxJTM1JTY1JTVmJTM2"
+                        + "JTM0JTVmJTY0JTYyJTM2JTM5JTM0JTM2JTYyJTYx";
+        return base64Encoded.equals(expected);
+    }
+}
+</pre>
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is the Fifth vault door and as mentioned in the problem statement it doesn't uses basic encoding it first encodes to URL encoding and then it encodes to base64.</p>
+            <p class="sol-lead">To decode this, first we need to know what the checkPassword method does, </p>            
+            <pre class="code-background prettyprint">   public String base64Encode(byte[] input) {
+        return Base64.getEncoder().encodeToString(input);
+    }
+    
+    public String urlEncode(byte[] input) {
+        StringBuffer buf = new StringBuffer();      
+        for (int i=0; i&lt;input.length; i++) {
+            buf.append(String.format("%%%2x", input[i]));     
+        }    
+        return buf.toString();
+    }
+    public boolean checkPassword(String password) {   
+        String urlEncoded = urlEncode(password.getBytes());
+        String base64Encoded = base64Encode(urlEncoded.getBytes());
+        String expected = "JTYzJTMwJTZlJTc2JTMzJTcyJTc0JTMxJTZlJTY3JTVm"
+                        + "JTY2JTcyJTMwJTZkJTVmJTYyJTYxJTM1JTY1JTVmJTM2"
+                        + "JTM0JTVmJTY0JTYyJTM2JTM5JTM0JTM2JTYyJTYx";
+        return base64Encoded.equals(expected);
+    }
+            </pre>
+            <p class="sol-lead">First it encodes the characters to ASCII encoded bytes and passes them as the argument to the urlEncode Method in that method there is a StringBuffer and each of the ASCII encoded is converted as HexaDecimal and also append them with % symbol and when the loop is done the method sends back the StringBuffer as String.
+            </p>
+            <p class="sol-lead">you can print the urlEncoded Variable if you want, after that this variable is sent to base64Encode Method to get a Base64 encoded String and it is done with a inbuilt Base64 Class methods.</p>
+            <p class="sol-lead">This is how the encoding is done in this program, so to Decode and get the Flag you can just reverse this process, I leave that part for you figure out, because I want you to understand how it is done, incase if you just want to know the Flag here it is,</p>
+            <pre class="code-background prettyprint">picoCTF{c0nv3rt1ng_fr0m_ba5e_64_db6946ba}</pre>
+					</div>
+          <p class="sol-lead">Reference Links,</p>
+          <ol class="bytes">
+            <li><a href="https://en.wikipedia.org/wiki/Base64">Base64 Encoding</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Percent-encoding">URL Encoding</a></li>            
+          </ol>
+          
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-6/vault-6-index.html">Next | vault6 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

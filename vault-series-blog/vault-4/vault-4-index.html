@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 4 WriteUp | AJ C0DE5 Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-4-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>27-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+				<article class="article">
+					<h3>vault-door-4 - Points 250</h3>
+					<p class="lead">This vault uses ASCII encoding for the password. The source code for this vault is here:</p>
+<pre class="code-background prettyprint">import java.util.*;
+
+class VaultDoor4 {
+    public static void main(String args[]) {
+        VaultDoor4 vaultDoor = new VaultDoor4();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+  String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+  if (vaultDoor.checkPassword(input)) {
+      System.out.println("Access granted.");
+  } else {
+      System.out.println("Access denied!");
+        }
+    }
+
+    // I made myself dizzy converting all of these numbers into different bases,
+    // so I just *know* that this vault will be impenetrable. This will make Dr.
+    // Evil like me better than all of the other minions--especially Minion
+    // #5620--I just know it!
+    //
+    //  .:::.   .:::.
+    // :::::::.:::::::
+    // :::::::::::::::
+    // ':::::::::::::'
+    //   ':::::::::'
+    //     ':::::'
+    //       ':'
+    // -Minion #7781
+    public boolean checkPassword(String password) {
+        byte[] passBytes = password.getBytes();
+        byte[] myBytes = {
+            106 , 85  , 53  , 116 , 95  , 52  , 95  , 98  ,
+            0x55, 0x6e, 0x43, 0x68, 0x5f, 0x30, 0x66, 0x5f,
+            0142, 0131, 0164, 063 , 0163, 0137, 070 , 060 ,
+            'f' , '8' , 'e' , '1' , 'e' , '0' , '4' , '7' ,
+        };
+    
+        for (int i=0; i<32; i++) {
+            if (passBytes[i] != myBytes[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+</pre>
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is the fourth vault door and this one is pretty easier than the previous one, if you've seen the above code then you might know what I mean, but it's okay if you didn't understand. from the question itself you can see they've used ASCII encoding for storing the bytes, and the resultant byte values are stored in a byte[] array</p>
+            <p class="sol-lead">From that bytes you can see, </p>
+            <ol class="bytes">
+              <li>the first 8 bytes are Decimal (base 10),</li>
+              <li>second 8 bytes are HexaDecimal (base 16),</li>
+              <li>third 8 bytes are Octal (base 8),</li>
+              <li>final 8 bytes are not encoded they are just Characters.</li>
+            </ol>
+            <p class="sol-lead">To find the Flag you can use a Explicit Conversion from byte to char to print the actual Flag, the code to that is</p>
+            <pre class="code-background prettyprint">
+              byte[] myBytes = {
+              106 , 85  , 53  , 116 , 95  , 52  , 95  , 98  ,
+              0x55, 0x6e, 0x43, 0x68, 0x5f, 0x30, 0x66, 0x5f,
+              0142, 0131, 0164, 063 , 0163, 0137, 070 , 060 ,
+              'f' , '8' , 'e' , '1' , 'e' , '0' , '4' , '7' ,
+            };
+            for(int i=0;i<32;i++) {
+                System.out.print((char)myBytes[i]);
+            }
+            </pre>
+            <p class="sol-lead">If you run the above code in a java program you can get the Flag as, </p>
+            <pre class="code-background prettyprint">picoCTF{jU5t_4_bUnCh_0f_bYt3s_80f8e1e047}</pre>
+					</div>
+          <p class="sol-lead">Reference Links,</p>
+          <ol class="bytes">
+            <li><a href="https://en.wikipedia.org/wiki/Decimal">Decimal base</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Octal">Octal base</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Hexadecimal">HexaDecimal base</a></li>
+          </ol>
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-5/vault-5-index.html">Next | vault5 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 1 WriteUp | AJ Codes Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-1-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>27-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+				<article class="article">
+					<h3>vault-door-1 - Points 100</h3>
+					<p class="lead">The vault uses some complicated array! I hope you can make sense of it, special agent. The source code for this vault is here:</p>
+<pre class="code-background prettyprint">import java.util.*;
+
+class VaultDoor1 {
+    public static void main(String args[]) {
+        VaultDoor1 vaultDoor = new VaultDoor1();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+	String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+	}
+    }
+
+    // I came up with a more secure way to check the password without putting
+    // the password itself in the source code. I think this is going to be
+    // UNHACKABLE!! I hope Dr. Evil agrees...
+    //
+    // -Minion #8728
+    public boolean checkPassword(String password) {
+        return password.length() == 32 &&
+               password.charAt(0)  == 'd' &&
+               password.charAt(29) == '8' &&
+               password.charAt(4)  == 'r' &&
+               password.charAt(2)  == '5' &&
+               password.charAt(23) == 'r' &&
+               password.charAt(3)  == 'c' &&
+               password.charAt(17) == '4' &&
+               password.charAt(1)  == '3' &&
+               password.charAt(7)  == 'b' &&
+               password.charAt(10) == '_' &&
+               password.charAt(5)  == '4' &&
+               password.charAt(9)  == '3' &&
+               password.charAt(11) == 't' &&
+               password.charAt(15) == 'c' &&
+               password.charAt(8)  == 'l' &&
+               password.charAt(12) == 'H' &&
+               password.charAt(20) == 'c' &&
+               password.charAt(14) == '_' &&
+               password.charAt(6)  == 'm' &&
+               password.charAt(24) == '5' &&
+               password.charAt(18) == 'r' &&
+               password.charAt(13) == '3' &&
+               password.charAt(19) == '4' &&
+               password.charAt(21) == 'T' &&
+               password.charAt(16) == 'H' &&
+               password.charAt(27) == '3' &&
+               password.charAt(30) == '4' &&
+               password.charAt(25) == '_' &&
+               password.charAt(22) == '3' &&
+               password.charAt(28) == 'f' &&
+               password.charAt(26) == '0' &&
+               password.charAt(31) == '1';
+    }
+}
+</pre>
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is vault-door-1 Flag Problem in this one, the Flag is compared using a charAt() String method which compares the user input String with the Flag, but the problem here is the Minons clearly changed the order of comparing the characters, to solve this you need to rearrange them in the numerical order from 0 to 31, when you're done you can clearly see the Flag, after rearranging the code</p>
+						<pre class="code-background prettyprint">         return password.length() == 32 &&
+               password.charAt(0)  == 'd' &&
+               password.charAt(1)  == '3' &&
+               password.charAt(2)  == '5' &&
+               password.charAt(3)  == 'c' &&
+               password.charAt(4)  == 'r' &&
+               password.charAt(5)  == '4' &&
+               password.charAt(6)  == 'm' &&
+               password.charAt(7)  == 'b' &&
+               password.charAt(8)  == 'l' &&
+               password.charAt(9)  == '3' &&
+               password.charAt(10) == '_' &&
+               password.charAt(11) == 't' &&
+               password.charAt(12) == 'H' &&
+               password.charAt(13) == '3' &&
+               password.charAt(14) == '_' &&
+               password.charAt(15) == 'c' &&
+               password.charAt(16) == 'H' &&
+               password.charAt(17) == '4' &&
+               password.charAt(18) == 'r' &&
+               password.charAt(19) == '4' &&
+               password.charAt(20) == 'c' &&
+               password.charAt(21) == 'T' &&
+               password.charAt(22) == '3' &&
+               password.charAt(23) == 'r' &&
+               password.charAt(24) == '5' &&
+               password.charAt(25) == '_' &&
+               password.charAt(26) == '0' &&
+               password.charAt(27) == '3' &&
+               password.charAt(28) == 'f' &&
+               password.charAt(29) == '8' &&
+               password.charAt(30) == '4' &&
+               password.charAt(31) == '1';		
+						</pre>
+						<p class="sol-lead">now you can see the code says "descramble_the_characters_03f841" and the Flag is </p>
+						<pre class="prettyprint code-background">picoCTF{d35cr4mbl3_tH3_cH4r4cT3r5_03f841}</pre>
+						<p>To know how to run a java program, please refer this <a class="links" target="_blank" href="https://beginnersbook.com/2013/05/first-java-program/">link</a></p>
+					</div>					
+					
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-3/vault-3-index.html">Next | vault3 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

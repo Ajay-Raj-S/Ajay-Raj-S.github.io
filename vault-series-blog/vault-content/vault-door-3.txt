@@ -1,0 +1,5 @@
+vault-door-3 - Points: 200
+
+Problem:
+
+This vault uses for-loops and bytes array. The source code for this vault is here: 

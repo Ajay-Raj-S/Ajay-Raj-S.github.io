@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vault Series | Vault door 7 WriteUp | AJ C0DE5 Blog</title>
+		<link rel="stylesheet" href="../normalize.css">
+		<link rel="stylesheet" href="css/vault-7-style.css">		
+	</head>
+	<body>
+
+		<div id="content">  
+			
+			<header>
+				<nav>
+					<li><a id="home" href="https://ajay-raj-s.github.io/">AJc0de5</a></li>
+					<li><a href="#">Blogs</a></li>
+					<li><a href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</nav>
+			</header>
+
+			<section id="main-content">
+				<h1 id="heading"><a class="links" href="https://2019game.picoctf.com/">PicoCTF 2019 </a> Writeups</h1>
+        <p class="stamp"><em>26-oct-2019 by AJc0de5</em></p>
+				<p class="lead"><a class="links" href="../valut-training/vault-training-index.html">Click</a> here to start from the beginning of the series.</p>
+				<article class="article">
+					<h3>vault-door-7 - Points 400</h3>
+					<p class="lead">This vault uses bit shifts to convert a password string into an array of integers. Hurry, agent, we are running out of time to stop Dr. Evil's nefarious plans! The source code for this vault is here:</p>
+<pre class="code-background prettyprint">import java.util.*;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
+
+class VaultDoor7 {
+    public static void main(String args[]) {
+        VaultDoor7 vaultDoor = new VaultDoor7();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+  String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+  if (vaultDoor.checkPassword(input)) {
+      System.out.println("Access granted.");
+  } else {
+      System.out.println("Access denied!");
+        }
+    }
+
+    // Each character can be represented as a byte value using its
+    // ASCII encoding. Each byte contains 8 bits, and an int contains
+    // 32 bits, so we can "pack" 4 bytes into a single int. Here's an
+    // example: if the hex string is "01ab", then those can be
+    // represented as the bytes {0x30, 0x31, 0x61, 0x62}. When those
+    // bytes are represented as binary, they are:
+    //
+    // 0x30: 00110000
+    // 0x31: 00110001
+    // 0x61: 01100001
+    // 0x62: 01100010
+    //
+    // If we put those 4 binary numbers end to end, we end up with 32
+    // bits that can be interpreted as an int.
+    //
+    // 00110000001100010110000101100010 -> 808542562
+    //
+    // Since 4 chars can be represented as 1 int, the 32 character password can
+    // be represented as an array of 8 ints.
+    //
+    // - Minion #7816
+    public int[] passwordToIntArray(String hex) {
+        int[] x = new int[8];
+        byte[] hexBytes = hex.getBytes();
+    
+        for (int i=0; i<8; i++) {
+            x[i] = hexBytes[(i*4)] << 24 | hexBytes[(i*4)+1] << 16 | hexBytes[(i*4)+2] << 8 | hexBytes[(i*4)+3];
+      System.out.print(x[i]+ " ");
+        }
+        return x;
+    }
+
+    public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        int[] x = passwordToIntArray(password);
+        return x[0] == 1096770097
+            && x[1] == 1952395366
+            && x[2] == 1600270708
+            && x[3] == 1601398833
+            && x[4] == 1716808014
+            && x[5] == 1734305335
+            && x[6] == 962749284
+            && x[7] == 828584245;
+    }
+}</pre>
+
+					<h3>Solution </h3>
+					<div id="solution">						
+						<p class="sol-lead">This is the Seventh vault door and in this program the checkPassword method uses Bit Shifting <code class="code-word"><<</code>, <code class="code-word">>></code>and an OR <code class="code-word">|</code> operation for storing the Flag.</p>
+            <p class="sol-lead">First let's see what the <code class="code-word">checkPassword</code> Method does, it sends the user input Flag to another method <code class="code-word">passwordToIntArray</code> which has a int array with length <code class="code-word">8</code> and another byte array <code class="code-word">hexBytes</code> to store the string as Bytes.</p>
+            <p class="sol-lead">Finally the loop which runs 8 times and what it stores on the int array is, takes the byte on the <code class="code-word">i</code><sup>th</sup> index of <code class="code-word">hexBytes</code> and the next consecutive three indexes and left shiftes their byte value by <code class="code-word">24</code>, <code class="code-word">16</code>, <code class="code-word">8</code> and stores them in the <code class="code-word">int</code> array and sends back to the <code class="code-word">checkPassword</code> method and every index has as value which is compared explicitly and if all of them matches, the method returns <code class="code-word">true</code>, else <code class="code-word">false</code>, Let's see the BruteForce code for this program, </p>
+          <h3 class="brute-force">Brute Force</h3>
+          <pre class="code-background prettyprint">
+import java.util.Arrays;
+
+public class Vault7BruteForce {
+    
+    private String looping(byte[] hex, int chkValue) {
+        for(int j=0;j&lt;hex.length;j++) {
+            for(int k=0;k&lt;hex.length;k++) {
+                for(int l=0;l&lt;hex.length;l++) {
+                    for(int m=0;m&lt;hex.length;m++) {
+                        if((hex[j] << 24
+                            | hex[k] << 16
+                            | hex[l] << 8
+                            | hex[m]) == chkValue) {
+                            return (char)hex[j]+""+(char)hex[k]+""+(char)hex[l]+""+(char)hex[m];
+                        }
+                    }
+                }
+            }
+        }
+        return "";
+    }
+    
+    private void bruteForce(String hex) {
+        int[] value = new int[8];
+        value[0] = 1096770097;
+        value[1] = 1952395366;
+        value[2] = 1600270708;
+        value[3] = 1601398833;
+        value[4] = 1716808014;
+        value[5] = 1734305335;
+        value[6] = 962749284;
+        value[7] = 828584245;
+        byte[] hexBytes = hex.getBytes();
+        System.out.print("picoCTF{");
+        for(int i=0;i<8;i++) {
+            System.out.print(looping(hexBytes, value[i]));
+        }
+        System.out.println("}");
+    }
+    
+    public static void main(String[] args) {        
+        char[] chr = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+                      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                      '1','2','3','4','5','6','7','8','9','0','_'};
+        new Vault7BruteForce().bruteForce(Arrays.toString(chr));
+    }
+}
+</pre>
+          <p class="sol-lead"></p>          
+            <p class="sol-lead">This method is more likely the last Flag BruteForce Problem, We are doing the opposite of what the original code does we are having four loops for each and every combination and then we compare current total value with the value we have in the given int array and when you run the above code you get the Flag as,</p>
+            
+            <pre class="code-background prettyprint">picoCTF{A_b1t_0f_b1t_sh1fTiNg_f79bcd1c15}</pre>
+            <p class="sol-lead">And just a note here, if you run this code in a much less processing power computer, it will print them as 4 characters at a time, because the loops runs almost <code class="code-word">(63)<sup>4</sup> * 8</code> times.</p>
+					</div>
+				</article>
+			</section>			
+			<footer>
+				<a id="next-vault" class="links" href="../vault-8/vault-8-index.html">Next | vault8 writeup</a>
+				<br><br>
+				<ul class="social">
+					<li><a class="links" href="https://twitter.com/ajay_raj_s">Twitter</a></li>
+					<li><a class="links" href="https://github.com/Ajay-Raj-S">Github</a></li>
+				</ul>
+			</footer>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	</body>
+</html>

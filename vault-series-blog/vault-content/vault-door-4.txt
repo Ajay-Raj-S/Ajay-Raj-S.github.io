@@ -1,0 +1,3 @@
+vault-door-4 - Points: 250
+
+This vault uses ASCII encoding for the password. The source code for this vault is here: 
