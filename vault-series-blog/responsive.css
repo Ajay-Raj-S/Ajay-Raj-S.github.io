@@ -31,9 +31,6 @@
 	.code-background {
 		width: 100%;
 	}
-	table {
-		overflow: scroll;
-	}
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
