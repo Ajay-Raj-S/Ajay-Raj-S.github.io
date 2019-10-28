@@ -1,11 +1,11 @@
  /* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 350px) {
+@media only screen and (max-width: 300px) {
 	#home {
 		font-size: 1.8rem;
 		padding: 0px 15px;
 	}
 	header > nav > li > a {
-		font-size: 1rem;
+		font-size: 0.75rem;
 	}
 }
 @media only screen and (max-width: 600px) {
