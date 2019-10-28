@@ -39,6 +39,10 @@ li {
 	list-style-type: none;	
 }
 
+ .table-wrap {
+ 	overflow-x: auto;
+ }
+
 header > nav > li {
 	display: inline-block;
 }
